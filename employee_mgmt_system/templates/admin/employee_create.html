@@ -1,0 +1,82 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width:700px;">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Add Employee</h4>
+        </div>
+        <div class="card-body">
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            <form method="post" id="employeeCreateForm">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="form_id" class="form-label">Select Form</label>
+                    <select name="form_id" id="form_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Choose a Form --</option>
+                        {% for f in forms %}
+                            <option value="{{ f.id }}" {% if selected_form and selected_form.id == f.id %}selected{% endif %}>{{ f.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if fields %}
+                    <h5>Login & Profile Info</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">First Name</label>
+                            <input type="text" name="first_name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="last_name" class="form-control" required>
+                        </div>
+                    </div>
+                    <h5>Form Fields</h5>
+                    {% for field in fields %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label>
+                            {% if field.field_type == "textarea" %}
+                                <textarea name="{{ field.key }}" class="form-control"></textarea>
+                            {% else %}
+                                <input type="{{ field.field_type }}" name="{{ field.key }}" class="form-control">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success w-100">Create Employee</button>
+                {% endif %}
+            <script>
+            document.getElementById('employeeCreateForm').addEventListener('submit', function(e) {
+                var username = document.getElementsByName('username')[0].value;
+                var password = document.getElementsByName('password')[0].value;
+                var email = document.getElementsByName('email')[0].value;
+                var errorMsg = '';
+                // Only check if the dynamic form field exists
+                var formUsernameFields = document.getElementsByName('username');
+                var formPasswordFields = document.getElementsByName('password');
+                var formEmailFields = document.getElementsByName('email');
+                if (formUsernameFields.length > 1 && formUsernameFields[1].value !== username) errorMsg += 'Username in form fields does not match login field.\n';
+                if (formPasswordFields.length > 1 && formPasswordFields[1].value !== password) errorMsg += 'Password in form fields does not match login field.\n';
+                if (formEmailFields.length > 1 && formEmailFields[1].value !== email) errorMsg += 'Email in form fields does not match login field.\n';
+                if (errorMsg) {
+                    alert(errorMsg);
+                    e.preventDefault();
+                }
+            });
+            </script>
+        </div>
+    </div>
+</div>
+{% endblock %}

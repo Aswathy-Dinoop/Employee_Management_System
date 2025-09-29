@@ -1,0 +1,107 @@
+{
+  "info": {
+    "name": "Employee Management System Machine Test",
+    "description": "Postman collection for EMS machine test APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{base_url}}/adminapp/api/register/", "host": ["{{base_url}}"], "path": ["adminapp", "api", "register"]},
+        "body": {"mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"adminpass\",\n  \"password2\": \"adminpass\",\n  \"email\": \"admin@example.com\"\n}"}
+      }
+    },
+    {
+      "name": "Auth - Login (JWT)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{base_url}}/adminapp/api/login/", "host": ["{{base_url}}"], "path": ["adminapp", "api", "login"]},
+        "body": {"mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"adminpass\"\n}"}
+      }
+    },
+    {
+      "name": "Auth - Change Password",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Authorization", "value": "Bearer {{access_token}}"}
+        ],
+        "url": {"raw": "{{base_url}}/adminapp/api/change-password/", "host": ["{{base_url}}"], "path": ["adminapp", "api", "change-password"]},
+        "body": {"mode": "raw", "raw": "{\n  \"old_password\": \"adminpass\",\n  \"new_password\": \"newpass123\"\n}"}
+      }
+    },
+    {
+      "name": "Auth - Profile",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+        "url": {"raw": "{{base_url}}/adminapp/api/profile/", "host": ["{{base_url}}"], "path": ["adminapp", "api", "profile"]}
+      }
+    },
+    {
+      "name": "Dynamic Forms - List/Create",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+        "url": {"raw": "{{base_url}}/ems_app/api/forms/", "host": ["{{base_url}}"], "path": ["ems_app", "api", "forms"]}
+      }
+    },
+    {
+      "name": "Dynamic Forms - Create",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{base_url}}/ems_app/api/forms/", "host": ["{{base_url}}"], "path": ["ems_app", "api", "forms"]},
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Employee Details\",\n  \"description\": \"Form for employee details\"\n}"}
+      }
+    },
+    {
+      "name": "Form Fields - Add",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{base_url}}/ems_app/api/form-fields/", "host": ["{{base_url}}"], "path": ["ems_app", "api", "form-fields"]},
+        "body": {"mode": "raw", "raw": "{\n  \"form\": 1,\n  \"label\": \"First Name\",\n  \"key\": \"first_name\",\n  \"field_type\": \"text\",\n  \"required\": true,\n  \"order\": 1\n}"}
+      }
+    },
+    {
+      "name": "Employees - List/Create",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+        "url": {"raw": "{{base_url}}/ems_app/api/employees/", "host": ["{{base_url}}"], "path": ["ems_app", "api", "employees"]}
+      }
+    },
+    {
+      "name": "Employees - Create",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{base_url}}/ems_app/api/employees/", "host": ["{{base_url}}"], "path": ["ems_app", "api", "employees"]},
+        "body": {"mode": "raw", "raw": "{\n  \"form\": 1,\n  \"data\": {\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john@example.com\"\n  }\n}"}
+      }
+    },
+    {
+      {
+      "request": {
+        "method": "PUT",
+        "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}, {"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{base_url}}/ems_app/api/employees/1/", "host": ["{{base_url}}"], "path": ["ems_app", "api", "employees", "1"]},
+        "body": {"mode": "raw", "raw": "{\n  \"form\": 1,\n  \"data\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"email\": \"jane@example.com\"\n  }\n}"}
+      }
+    },
+    {
+      "name": "Employees - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+        "url": {"raw": "{{base_url}}/ems_app/api/employees/1/", "host": ["{{base_url}}"], "path": ["ems_app", "api", "employees", "1"]}
+      }
+    }
+  ]
+}

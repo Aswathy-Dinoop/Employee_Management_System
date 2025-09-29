@@ -1,0 +1,28 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container mt-5" style="max-width:500px;">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Create New Form</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="formName" class="form-label">Form Name</label>
+                    <input type="text" name="name" id="formName" class="form-control" required placeholder="Enter form name">
+                </div>
+                <div class="mb-3">
+                    <label for="formDesc" class="form-label">Description</label>
+                    <textarea name="description" id="formDesc" class="form-control" rows="3" placeholder="Describe the form"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Save Form</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}
+
+<!-- Table Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="mb-0">Employee List</h6>
+                    <a href="{% url 'employee_create' %}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add Employee</a>
+                </div>
+                <!-- Search/Filter Form -->
+                <form method="get" class="row g-2 mb-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Search by Name/Email</label>
+                        <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Type to search...">
+                    </div>
+                    {% comment %} {% if employees and employees.0.form and employees.0.form.fields.all %}
+                        {% for field in employees.0.form.fields.all %}
+                        <div class="col-md-3">
+                            <label class="form-label">{{ field.label }}</label>
+                            <input type="text" name="filter_{{ field.key }}" value="{{ request.GET|get_item:'filter_'|add:field.key }}" class="form-control" placeholder="{{ field.label }}">
+                        </div>
+                        {% endfor %}
+                    {% endif %} {% endcomment %}
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered align-middle">
+                        <thead class="table-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Email</th>
+        {% comment %} <th scope="col">Phone</th> {% endcomment %}
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+    </tr>
+</thead>
+<tbody>
+    {% for employee in employees %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ employee.user.first_name }}</td>
+            <td>{{ employee.user.last_name }}</td>
+            <td>{{ employee.user.email }}</td>
+            <td>
+                <span class="badge bg-success">Active</span>
+            </td>
+            <td>
+                <a href="{% url 'employee_edit' employee.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                <a href="{% url 'employee_delete' employee.pk %}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Are you sure you want to delete this employee?');">
+                   Delete
+                </a>
+                {% if employee.form and employee.form.fields.all %}
+                <button type="button" class="btn btn-sm btn-info ms-2" onclick="toggleDynamicFields('dyn-{{ employee.pk }}')">View Details</button>
+                {% endif %}
+            </td>
+        </tr>
+        {% if employee.form and employee.form.fields.all %}
+        <tr id="dyn-{{ employee.pk }}" style="display:none;">
+            <td colspan="7" class="bg-light">
+                <strong>Dynamic Fields:</strong>
+                <ul class="mb-0">
+                {% for field in employee.form.fields.all %}
+                    <li><b>{{ field.label }}:</b> {{ employee.data|get_item:field.key|default:"-" }}</li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endif %}
+    {% empty %}
+        <tr>
+            <td colspan="7" class="text-center text-muted">No employees found</td>
+        </tr>
+    {% endfor %}
+</tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Table End -->
+<script>
+function toggleDynamicFields(rowId) {
+    var row = document.getElementById(rowId);
+    if (row.style.display === "none") {
+        row.style.display = "table-row";
+    } else {
+        row.style.display = "none";
+    }
+}
+</script>
+{% endblock %}

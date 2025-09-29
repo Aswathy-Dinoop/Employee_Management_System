@@ -1,0 +1,46 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>Edit Employee: {{ employee.user.first_name }} {{ employee.user.last_name }}</h3>
+
+    <form id="employeeForm" method="post">
+        {% csrf_token %}
+        <!-- Select Dynamic Form -->
+        <div class="mb-3">
+            <label for="form_id" class="form-label">Select Form</label>
+            <select name="form_id" id="form_id" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Choose a Form --</option>
+                {% for f in forms %}
+                    <option value="{{ f.id }}" {% if employee.form and employee.form.id == f.id %}selected{% endif %}>
+                        {{ f.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Dynamic Fields -->
+        {% if fields %}
+            <h5>Form Fields</h5>
+            {% for field in fields %}
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}</label>
+                    {% if field.field_type == "textarea" %}
+                        <textarea name="{{ field.key }}" class="form-control">{{ employee.data|get_item:field.key }}</textarea>
+                    {% else %}
+                        <input type="{{ field.field_type }}" 
+                               name="{{ field.key }}" 
+                               value="{{ employee.data|get_item:field.key }}" 
+                               class="form-control">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'view_employees' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
